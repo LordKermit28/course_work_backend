@@ -22,9 +22,6 @@ def make_str_into_digit(line: str):
         result = None
     return result
 
-
-
-    # Функция для маскирования номера карты
 def mask_card_number(card_number: str):
     card_number = make_str_into_digit(card_number)
     try:
@@ -34,7 +31,6 @@ def mask_card_number(card_number: str):
         result = None
     return result
 
-    # Функция для маскирования номера счета
 def mask_account(account_number: str):
     try:
         account_number = make_str_into_digit(account_number)
@@ -44,7 +40,7 @@ def mask_account(account_number: str):
         result = None
     return result
 
-# Сортируем операции по дате (в обратном порядке)
+
 def sorted_operations(operations):
     return sorted([op for op in operations if op.get('state') == 'EXECUTED'], key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)
 
@@ -52,7 +48,7 @@ def output_operations(operations, n: int):
 
     operations = sorted_operations(operations)
 
-    for operation in operations[:n]:
+    for operation in operations:
 
         date = datetime.strptime(operation['date'], '%Y-%m-%dT%H:%M:%S.%f').strftime('%d.%m.%Y')
         operation_type = operation['description']
@@ -67,12 +63,13 @@ def output_operations(operations, n: int):
         from_account = mask_card_number(from_account)
         to_account = mask_account(to_account)
 
-        # Выводим информацию об операции
-        print(f"{date} {operation_type}")
-        print(f"{from_account} -> {to_account}")
-        print(f"{amount} {currency}")
-        print()
+        return date, operation_type, amount, currency, from_account, to_account
 
-# data = get_data()
+
+
+
+
+
+data = get_data()
 #
-# output_operations(data, 5)
+output_operations(data, 5)
