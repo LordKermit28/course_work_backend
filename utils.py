@@ -22,19 +22,15 @@ def make_str_into_digit(line: str):
         result = None
     return result
 
-
-
-    # Функция для маскирования номера карты
 def mask_card_number(card_number: str):
     card_number = make_str_into_digit(card_number)
     try:
-        result = f"{card_number[:6]} {'*'*4} {'*'*4} {card_number[-4:]}"
+        result = f"{card_number[:6]}{'*'*2} {'*'*4} {card_number[-4:]}"
     except TypeError as e:
         print(f"Вы должны ввести строковой тип данных\nВы вызвали ошибку {e}")
         result = None
     return result
 
-    # Функция для маскирования номера счета
 def mask_account(account_number: str):
     try:
         account_number = make_str_into_digit(account_number)
@@ -44,14 +40,21 @@ def mask_account(account_number: str):
         result = None
     return result
 
-# Сортируем операции по дате (в обратном порядке)
+
 def sorted_operations(operations):
     return sorted([op for op in operations if op.get('state') == 'EXECUTED'], key=lambda x: datetime.strptime(x['date'], '%Y-%m-%dT%H:%M:%S.%f'), reverse=True)
+
+
+def print_data(data):
+    for i in data:
+        print(data)
+
+
 
 def output_operations(operations, n: int):
 
     operations = sorted_operations(operations)
-
+    output = []
     for operation in operations[:n]:
 
         date = datetime.strptime(operation['date'], '%Y-%m-%dT%H:%M:%S.%f').strftime('%d.%m.%Y')
@@ -60,19 +63,29 @@ def output_operations(operations, n: int):
         from_account = operation.get('from')
         to_account = operation['to']
 
-        if not from_account or not to_account:
+        if not from_account:
             from_account = ""
+        if not to_account:
             to_account = ""
 
         from_account = mask_card_number(from_account)
         to_account = mask_account(to_account)
 
-        # Выводим информацию об операции
-        print(f"{date} {operation_type}")
-        print(f"{from_account} -> {to_account}")
-        print(f"{amount} {currency}")
+        output.append([date, operation_type, from_account, to_account, amount, currency])
+
+    return output
+
+
+def print_output(list: list):
+    for element in list:
+        print(f"{element[0]} {element[1]}")
+        print(f"{element[2]} -> {element[3]}")
+        print(f"{element[4]} {element[5]}")
         print()
 
-# data = get_data()
 #
-# output_operations(data, 5)
+# data = get_data()
+# #
+# list = output_operations(data, 1)
+#
+# print_output(list)
